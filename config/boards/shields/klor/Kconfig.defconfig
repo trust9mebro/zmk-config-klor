@@ -47,3 +47,37 @@ endif # LVGL
 
 
 endif # LEFT RIGHT
+
+
+
+# Left (central) OLED: custom status screen with both halves' battery
+# (klor_status_both.c). Mirrors what ZMK's built-in screen enables.
+if SHIELD_KLOR_LEFT
+
+    config ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING
+        default y
+
+    choice ZMK_DISPLAY_STATUS_SCREEN
+        default ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+    endchoice
+
+    config LV_Z_MEM_POOL_SIZE
+        default 4096 if ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+
+    config ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+        select LV_USE_LABEL
+        select LV_FONT_MONTSERRAT_12
+        select LV_FONT_MONTSERRAT_16
+        imply LV_USE_THEME_MONO
+        imply ZMK_WIDGET_LAYER_STATUS
+        imply ZMK_WIDGET_OUTPUT_STATUS
+
+if ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+
+    choice LV_FONT_DEFAULT
+        default LV_FONT_DEFAULT_MONTSERRAT_16
+    endchoice
+
+endif # ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+
+endif # SHIELD_KLOR_LEFT
